@@ -1,7 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text} from 'react-native';
 import {Colors} from '../../consts/colors';
-import {TextInput, FlatList, TouchableOpacity} from 'react-native-gesture-handler';
+import {
+  TextInput,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native-gesture-handler';
 import {getStatusBarHeight} from 'react-native-iphone-x-helper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {getMovies} from '../../services/moviesService';
@@ -20,6 +24,8 @@ const Search = () => {
     if (title) {
       const moviesData = await getMovies(title);
       setMoviesList(moviesData.results);
+    } else {
+      setMoviesList([]);
     }
   };
 
@@ -30,13 +36,19 @@ const Search = () => {
         justifyContent: 'flex-start',
         backgroundColor: Colors.background,
       }}>
-      <View style={{paddingTop: getStatusBarHeight(), marginTop: 10}}>
+      <View
+        style={{
+          paddingTop: getStatusBarHeight(),
+          marginTop: 10,
+          flex: 1,
+          marginBottom: 10,
+        }}>
         <View
           style={{
             backgroundColor: '#564d4d',
             width: '95%',
             alignSelf: 'center',
-            padding: 20,
+            padding: 15,
             justifyContent: 'space-between',
             borderRadius: 25,
             flexDirection: 'row',
@@ -61,11 +73,15 @@ const Search = () => {
       </View>
       <FlatList
         data={movieList}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={{justifyContent:'center'}}
-        renderItem={({ item }) => (
-          <TouchableOpacity>
-            <Text style={{color: 'white', padding: 8, width: '50%'}} numberOfLines={1}>{item.title} </Text>
+        keyExtractor={(item) => item.id.toString()}
+        contentContainerStyle={{justifyContent: 'center'}}
+        renderItem={({item}) => (
+          <TouchableOpacity style={{width: '100%', marginLeft: 10}}>
+            <Text
+              style={{color: 'white', padding: 8, width: '50%'}}
+              numberOfLines={1}>
+              {item.title}{' '}
+            </Text>
           </TouchableOpacity>
         )}
       />

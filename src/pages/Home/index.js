@@ -16,10 +16,23 @@ const Home = () => {
           alignItems: 'center',
         }}>
         <Image
-          style={{resizeMode: 'contain', width: '100%', height: 300}}
+          style={{
+            resizeMode: 'cover',
+            width: '50%',
+            minHeight: 300,
+            maxHeight: 400,
+          }}
           source={{uri: BaseImageUrl + item.poster_path}}
         />
-        <Text style={{color: Colors.text, alignSelf: 'center', textAlign:'center'}}>
+        <Text
+          style={{
+            color: Colors.text,
+            alignSelf: 'center',
+            textAlign: 'center',
+            fontSize: 18,
+            marginTop: 15,
+            fontWeight: 'bold',
+          }}>
           {item.title}
         </Text>
       </View>
@@ -47,8 +60,16 @@ const Home = () => {
         justifyContent: 'center',
         backgroundColor: Colors.background,
       }}>
-      <View style={{marginTop: 100}}>
-        <Text style={{color: Colors.text}}>Lançamentos</Text>
+      <View style={{marginTop: 50}}>
+        <Text
+          style={{
+            color: Colors.text,
+            marginBottom: 20,
+            fontSize: 24,
+            fontWeight: 'bold',
+          }}>
+          Lançamentos
+        </Text>
       </View>
       <Carousel
         enableSnap
