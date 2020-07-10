@@ -7,6 +7,8 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Home from '../pages/Home';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Search from '../pages/Search';
+import MovieInfo from '../pages/MovieInfo';
+import {Colors} from '../consts/colors';
 
 Icon.loadFont();
 
@@ -40,6 +42,35 @@ const SearchRoutes = () => {
   );
 };
 
+const HomeRoutes = () => {
+  return (
+    <TabStack.Navigator>
+      <TabStack.Screen
+        name="Home"
+        component={Home}
+        options={() => ({
+          headerShown: false,
+        })}
+      />
+      <TabStack.Screen
+        name="MovieInfo"
+        component={MovieInfo}
+        options={() => ({
+          title: '',
+          headerStyle: {backgroundColor: Colors.background},
+          headerTitleStyle: {color: Colors.text},
+          headerBackTitleStyle: {
+            color: Colors.text,
+            fontSize: 20,
+            marginLeft: 10,
+          },
+          headerTintColor: Colors.text,
+        })}
+      />
+    </TabStack.Navigator>
+  );
+};
+
 const Tabs = () => {
   return (
     <Tab.Navigator
@@ -49,7 +80,7 @@ const Tabs = () => {
         inactiveTintColor: 'gray',
         style: {backgroundColor: 'black'},
       }}>
-      <Tab.Screen name="Início" component={Home} />
+      <Tab.Screen name="Início" component={HomeRoutes} />
       <Tab.Screen name="Busca" component={SearchRoutes} />
     </Tab.Navigator>
   );

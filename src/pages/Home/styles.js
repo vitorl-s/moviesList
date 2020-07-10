@@ -1,5 +1,6 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Platform} from 'react-native';
 import {Colors} from '../../consts/colors';
+import {getStatusBarHeight} from 'react-native-iphone-x-helper';
 
 const styles = StyleSheet.create({
   container: {
@@ -7,6 +8,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: Colors.background,
+  },
+  newMoviesContainer: {
+    paddingTop: Platform.OS === 'ios' ? getStatusBarHeight() + 15 : 10,
   },
   title: {
     color: Colors.text,
@@ -31,6 +35,22 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginTop: 15,
     fontWeight: 'bold',
+  },
+  listTitle: {
+    flex: 1,
+    width: '100%',
+  },
+  titleCategory: {
+    color: 'white',
+    fontSize: 22,
+    fontWeight: 'bold',
+    padding: 10,
+    marginLeft: 10,
+  },
+  movieImg: {
+    width: 150,
+    height: 150,
+    resizeMode: 'contain',
   },
 });
 

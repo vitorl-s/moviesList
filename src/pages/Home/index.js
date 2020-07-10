@@ -10,11 +10,9 @@ import styles from './styles';
 import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
 import {getGenres} from '../../services/genresService';
 
-const Home = () => {
+const Home = ({navigation}) => {
   const [trending, setTrending] = useState([]);
-  const [discover, setDiscover] = useState([]);
   const [genres, setGenres] = useState([]);
-  const [finalArray, setFinal] = useState([]);
   const [isSorted, setSorted] = useState(false);
 
   const _renderItem = ({item}) => {
@@ -41,12 +39,10 @@ const Home = () => {
   }, [genres]);
 
   const sortMovies = async () => {
-    let sortedMovies;
-    sortedMovies = await genres.map(async (item, index) => {
+    await genres.map(async (item, index) => {
       const data = await getDiscoverMovies(item.id);
       if (index === genres.length - 1) {
         setSorted(true);
-        setFinal(sortedMovies);
       }
       return (item.movies = data);
     });
@@ -66,7 +62,7 @@ const Home = () => {
       const genresData = await getGenres();
       setGenres(genresData.genres);
     } catch {
-      Alert.alert('Erro get genres');
+      Alert.alert('error get genres');
     }
   };
 
@@ -81,7 +77,7 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
-      <View style={{marginTop: 50}}>
+      <View style={styles.newMoviesContainer}>
         <Text style={styles.title}>Lançamentos</Text>
       </View>
       <Carousel
@@ -95,27 +91,30 @@ const Home = () => {
         <FlatList
           data={genres}
           nestedScrollEnabled
-          style={{flex: 1, width: '100%'}}
+          style={styles.listTitle}
           keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={{justifyContent: 'center'}}
           renderItem={({item, index}) => (
             <View>
-              <TouchableOpacity style={{padding: 10}}>
-                <Text style={{color: 'white'}} numberOfLines={1}>
-                  {item.name}
-                </Text>
-              </TouchableOpacity>
+              <Text style={styles.titleCategory} numberOfLines={1}>
+                {item.name}
+              </Text>
               <FlatList
                 data={genres}
                 horizontal
-                style={{width: '100%'}}
                 keyExtractor={(item) => item.id.toString()}
-                contentContainerStyle={{justifyContent: 'center'}}
                 renderItem={({item}) => (
-                  <TouchableOpacity style={{padding: 10}}>
-                    <Text style={{color: 'gray'}} numberOfLines={1}>
-                      {item.movies[index].title}
-                    </Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('MovieInfo', {
+                        movieInfo: item.movies[index],
+                      });
+                    }}>
+                    <Image
+                      style={styles.movieImg}
+                      source={{
+                        uri: BaseImageUrl + item.movies[index].poster_path,
+                      }}
+                    />
                   </TouchableOpacity>
                 )}
               />
