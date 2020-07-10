@@ -3,19 +3,26 @@ import {API} from './baseService/index';
 export async function getMovies(title) {
   try {
     const response = await API.get(`/search/movie?query=${title}`);
-    await console.log('response movies', response);
     return Promise.resolve(response);
   } catch (error) {
-    // console.log('error', error);
+    console.log('error get movies', error);
   }
 }
 
-export async function getTrendingMovies(title) {
+export async function getTrendingMovies() {
   try {
-    const response = await API.get(`/trending/movie/week`);
-    await console.log('response movies', response);
+    const response = await API.get('/trending/movie/week');
     return Promise.resolve(response);
   } catch (error) {
-    // console.log('error', error);
+    console.log('error get trending movies', error);
+  }
+}
+
+export async function discoverPopularMovies() {
+  try {
+    const response = await API.get('discover/movie?sort_by=popularity.desc');
+    return Promise.resolve(response);
+  } catch (error) {
+    console.log('error discover movies', error);
   }
 }

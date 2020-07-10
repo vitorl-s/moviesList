@@ -1,82 +1,89 @@
-import React, {useRef, useState, useEffect} from 'react';
-import {View, Text, Image, Dimensions} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, Text, Image, Dimensions, Alert} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
-import {Colors} from '../../consts/colors';
-import {getTrendingMovies} from '../../services/moviesService';
+import {
+  getTrendingMovies,
+  discoverPopularMovies,
+} from '../../services/moviesService';
 import {BaseImageUrl} from '../../consts/baseImageUrl';
+import styles from './styles';
+import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
+import {getGenres} from '../../services/genresService';
 
 const Home = () => {
-  const carousel = useRef(null);
   const [trending, setTrending] = useState([]);
-  const _renderItem = ({item, index}) => {
+  const [discover, setDiscover] = useState([]);
+  const [genres, setGenres] = useState([]);
+
+  const _renderItem = ({item}) => {
     return (
-      <View
-        style={{
-          flex: 0.5,
-          alignItems: 'center',
-        }}>
+      <View style={styles.carouselContainer}>
         <Image
-          style={{
-            resizeMode: 'cover',
-            width: '50%',
-            minHeight: 300,
-            maxHeight: 400,
-          }}
+          style={styles.carouselImage}
           source={{uri: BaseImageUrl + item.poster_path}}
         />
-        <Text
-          style={{
-            color: Colors.text,
-            alignSelf: 'center',
-            textAlign: 'center',
-            fontSize: 18,
-            marginTop: 15,
-            fontWeight: 'bold',
-          }}>
-          {item.title}
-        </Text>
+        <Text style={styles.carouselTitle}>{item.title}</Text>
       </View>
     );
   };
 
   useEffect(() => {
     getTrending();
+    getDiscoverMovies();
+    getGenresData();
   }, []);
 
-  useEffect(() => {
-    console.log('valor do trending', trending);
-  }, [trending]);
-
   const getTrending = async () => {
-    const trendingData = await getTrendingMovies();
-    setTrending(trendingData.results);
+    try {
+      const trendingData = await getTrendingMovies();
+      setTrending(trendingData.results);
+    } catch {
+      Alert.alert('error trending movies');
+    }
+  };
+
+  const getGenresData = async () => {
+    try {
+      const genresData = await getGenres();
+      setGenres(genresData.genres);
+    } catch {
+      Alert.alert('Erro get genres');
+    }
+  };
+
+  const getDiscoverMovies = async () => {
+    try {
+      const discoverData = await discoverPopularMovies();
+      setDiscover(discoverData.results);
+    } catch {
+      Alert.alert('error discover movies');
+    }
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: Colors.background,
-      }}>
+    <View style={styles.container}>
       <View style={{marginTop: 50}}>
-        <Text
-          style={{
-            color: Colors.text,
-            marginBottom: 20,
-            fontSize: 24,
-            fontWeight: 'bold',
-          }}>
-          Lançamentos
-        </Text>
+        <Text style={styles.title}>Lançamentos</Text>
       </View>
       <Carousel
         enableSnap
         data={trending}
         renderItem={_renderItem}
         sliderWidth={Dimensions.get('screen').width}
-        itemWidth={Dimensions.get('screen').width}
+        itemWidth={Dimensions.get('screen').width - 10}
+      />
+      <FlatList
+        data={genres}
+        style={{flex: 1, padding: 10, width: '100%'}}
+        keyExtractor={(item) => item.id.toString()}
+        contentContainerStyle={{justifyContent: 'center'}}
+        renderItem={({item}) => (
+          <TouchableOpacity style={{padding: 10}}>
+            <Text style={{color:'white'}} numberOfLines={1}>
+              {item.name}
+            </Text>
+          </TouchableOpacity>
+        )}
       />
     </View>
   );
