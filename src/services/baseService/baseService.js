@@ -1,13 +1,13 @@
 import axios from 'axios';
-import {BASEURL} from '../../consts/baseUrl';
-import {TOKEN} from '../../consts/token';
+import {BaseUrl} from '../../consts/baseUrl';
+import {Token} from '../../consts/token';
 
 const API = axios.create({
-  baseURL: BASEURL,
+  baseURL: BaseUrl,
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
-    Authorization: 'Bearer ' + TOKEN,
+    Authorization: 'Bearer ' + Token,
   },
 });
 

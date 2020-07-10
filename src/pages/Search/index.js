@@ -1,13 +1,28 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text} from 'react-native';
 import {Colors} from '../../consts/colors';
-import {TextInput} from 'react-native-gesture-handler';
+import {TextInput, FlatList, TouchableOpacity} from 'react-native-gesture-handler';
 import {getStatusBarHeight} from 'react-native-iphone-x-helper';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {getMovies} from '../../services/moviesService';
 
 // import { Container } from './styles';
 
 const Search = () => {
   const [searchTitle, setSearchTitle] = useState('');
+  const [movieList, setMoviesList] = useState([]);
+
+  useEffect(() => {
+    handleSearch(searchTitle);
+  }, [searchTitle]);
+
+  const handleSearch = async (title) => {
+    if (title) {
+      const moviesData = await getMovies(title);
+      setMoviesList(moviesData.results);
+    }
+  };
+
   return (
     <View
       style={{
@@ -18,15 +33,24 @@ const Search = () => {
       <View style={{paddingTop: getStatusBarHeight(), marginTop: 10}}>
         <View
           style={{
-            backgroundColor: 'gray',
+            backgroundColor: '#564d4d',
             width: '95%',
             alignSelf: 'center',
             padding: 20,
+            justifyContent: 'space-between',
             borderRadius: 25,
+            flexDirection: 'row',
+            alignItems: 'flex-end',
           }}>
+          <Ionicons name={'search'} size={20} color={'gray'} />
           <TextInput
             value={searchTitle}
-            style={{alignSelf: 'flex-start', color: 'white'}}
+            style={{
+              alignSelf: 'center',
+              color: 'white',
+              width: '88%',
+              alignItems: 'flex-end',
+            }}
             placeholder="Busque seu filme"
             onChangeText={(value) => setSearchTitle(value)}
             placeholderTextColor="white"
@@ -35,6 +59,16 @@ const Search = () => {
           />
         </View>
       </View>
+      <FlatList
+        data={movieList}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={{justifyContent:'center'}}
+        renderItem={({ item }) => (
+          <TouchableOpacity>
+            <Text style={{color: 'white', padding: 8, width: '50%'}} numberOfLines={1}>{item.title} </Text>
+          </TouchableOpacity>
+        )}
+      />
     </View>
   );
 };
