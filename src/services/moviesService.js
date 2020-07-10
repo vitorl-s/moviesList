@@ -18,9 +18,12 @@ export async function getTrendingMovies() {
   }
 }
 
-export async function discoverPopularMovies() {
+export async function discoverPopularMovies(categoryId) {
   try {
-    const response = await API.get('discover/movie?sort_by=popularity.desc');
+    const response = await API.get(
+      `discover/movie?sort_by=popularity.desc&with_genres=${categoryId}`,
+    );
+    //console.log('response', response.results[0]);
     return Promise.resolve(response);
   } catch (error) {
     console.log('error discover movies', error);

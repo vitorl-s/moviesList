@@ -14,6 +14,8 @@ const Home = () => {
   const [trending, setTrending] = useState([]);
   const [discover, setDiscover] = useState([]);
   const [genres, setGenres] = useState([]);
+  const [finalArray, setFinal] = useState([]);
+  const [isSorted, setSorted] = useState(false);
 
   const _renderItem = ({item}) => {
     return (
@@ -28,10 +30,27 @@ const Home = () => {
   };
 
   useEffect(() => {
-    getTrending();
-    getDiscoverMovies();
     getGenresData();
+    getTrending();
   }, []);
+
+  useEffect(() => {
+    if (genres.length > 0) {
+      sortMovies();
+    }
+  }, [genres]);
+
+  const sortMovies = async () => {
+    let sortedMovies;
+    sortedMovies = await genres.map(async (item, index) => {
+      const data = await getDiscoverMovies(item.id);
+      if (index === genres.length - 1) {
+        setSorted(true);
+        setFinal(sortedMovies);
+      }
+      return (item.movies = data);
+    });
+  };
 
   const getTrending = async () => {
     try {
@@ -51,10 +70,10 @@ const Home = () => {
     }
   };
 
-  const getDiscoverMovies = async () => {
+  const getDiscoverMovies = async (categoryId) => {
     try {
-      const discoverData = await discoverPopularMovies();
-      setDiscover(discoverData.results);
+      const discoverData = await discoverPopularMovies(categoryId.toString());
+      return discoverData.results;
     } catch {
       Alert.alert('error discover movies');
     }
@@ -72,19 +91,38 @@ const Home = () => {
         sliderWidth={Dimensions.get('screen').width}
         itemWidth={Dimensions.get('screen').width - 10}
       />
-      <FlatList
-        data={genres}
-        style={{flex: 1, padding: 10, width: '100%'}}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={{justifyContent: 'center'}}
-        renderItem={({item}) => (
-          <TouchableOpacity style={{padding: 10}}>
-            <Text style={{color:'white'}} numberOfLines={1}>
-              {item.name}
-            </Text>
-          </TouchableOpacity>
-        )}
-      />
+      {isSorted && (
+        <FlatList
+          data={genres}
+          nestedScrollEnabled
+          style={{flex: 1, width: '100%'}}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={{justifyContent: 'center'}}
+          renderItem={({item, index}) => (
+            <View>
+              <TouchableOpacity style={{padding: 10}}>
+                <Text style={{color: 'white'}} numberOfLines={1}>
+                  {item.name}
+                </Text>
+              </TouchableOpacity>
+              <FlatList
+                data={genres}
+                horizontal
+                style={{width: '100%'}}
+                keyExtractor={(item) => item.id.toString()}
+                contentContainerStyle={{justifyContent: 'center'}}
+                renderItem={({item}) => (
+                  <TouchableOpacity style={{padding: 10}}>
+                    <Text style={{color: 'gray'}} numberOfLines={1}>
+                      {item.movies[index].title}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              />
+            </View>
+          )}
+        />
+      )}
     </View>
   );
 };
