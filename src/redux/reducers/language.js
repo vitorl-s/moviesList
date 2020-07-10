@@ -5,7 +5,6 @@ const initialState = {
 };
 
 const LanguageReducer = (state = initialState, action) => {
-  console.log('valor da actionsssssssssss', action.language);
   switch (action.type) {
     case LANGUAGE:
       return {

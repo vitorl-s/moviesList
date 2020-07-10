@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {View, Text, NativeModules, Platform} from 'react-native';
+import {NativeModules, Platform} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -9,9 +9,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Search from '../pages/Search';
 import MovieInfo from '../pages/MovieInfo';
 import {Colors} from '../consts/colors';
-import {PersistGate} from 'redux-persist/integration/react';
-import {Provider, useDispatch, useSelector} from 'react-redux';
-import {store, persistor} from '../redux/store';
+import {useDispatch} from 'react-redux';
 import {SaveLanguage} from '../redux/actions/saveLaguage';
 
 Icon.loadFont();
@@ -92,9 +90,6 @@ const Tabs = () => {
 
 const MoviesApp = () => {
   const dispatch = useDispatch();
-  const language = useSelector((state) => state.language.language);
-  console.log('valor da lng', language);
-
   React.useEffect(() => {
     handleLocale();
   });
