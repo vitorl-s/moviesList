@@ -36,7 +36,7 @@ const Home = ({navigation}) => {
     if (genres.length > 0) {
       sortMovies();
     }
-  }, [genres]);
+  });
 
   const sortMovies = async () => {
     await genres.map(async (item, index) => {

@@ -1,4 +1,8 @@
-import {API} from './baseService/index';
+import { API } from './baseService/index';
+import { store } from '../redux/store';
+
+const s = store.getState();
+console.log('sssssssss', s);
 
 export async function getGenres() {
   try {
