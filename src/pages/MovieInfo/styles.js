@@ -1,14 +1,16 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
 import {Colors} from '../../consts/colors';
 
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     backgroundColor: Colors.background,
+    paddingBottom: 25,
   },
   movieImg: {
-    width: '100%',
-    height: '60%',
+    alignSelf: 'center',
+    width: Dimensions.get('screen').width,
+    height: Dimensions.get('screen').height / 2,
     resizeMode: 'contain',
   },
   textContainer: {

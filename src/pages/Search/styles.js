@@ -10,19 +10,17 @@ const styles = StyleSheet.create({
   },
   statuBarContainer: {
     paddingTop: getStatusBarHeight(),
-    marginTop: 10,
-    flex: 1,
     marginBottom: 10,
   },
   inputContainer: {
     backgroundColor: '#564d4d',
     width: '95%',
     alignSelf: 'center',
-    padding: 15,
+    padding: 10,
     justifyContent: 'space-between',
-    borderRadius: 25,
+    borderRadius: 50,
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    alignItems: 'center',
   },
   input: {
     alignSelf: 'center',

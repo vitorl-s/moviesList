@@ -48,6 +48,7 @@ const Search = () => {
       </View>
       <FlatList
         data={movieList}
+        style={{flex:1}}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={{justifyContent: 'center'}}
         renderItem={({item}) => (

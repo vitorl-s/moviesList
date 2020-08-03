@@ -1,5 +1,13 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, Image, Dimensions, Alert} from 'react-native';
+import React, {useState, useEffect, useRef} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  Dimensions,
+  Alert,
+  FlatList,
+  ActivityIndicator,
+} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import {
   getTrendingMovies,
@@ -7,14 +15,14 @@ import {
 } from '../../services/moviesService';
 import {BaseImageUrl} from '../../consts/baseImageUrl';
 import styles from './styles';
-import {FlatList, TouchableOpacity} from 'react-native-gesture-handler';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import {getGenres} from '../../services/genresService';
 
 const Home = ({navigation}) => {
   const [trending, setTrending] = useState([]);
   const [genres, setGenres] = useState([]);
   const [isSorted, setSorted] = useState(false);
-
+  const isMountedRef = useRef(null);
   const _renderItem = ({item}) => {
     return (
       <View style={styles.carouselContainer}>
@@ -33,19 +41,25 @@ const Home = ({navigation}) => {
   }, []);
 
   useEffect(() => {
-    if (genres.length > 0) {
+    isMountedRef.current = true;
+    if (genres.length > 0 && isMountedRef.current) {
       sortMovies();
     }
-  });
+  }, [genres]);
 
   const sortMovies = async () => {
-    await genres.map(async (item, index) => {
-      const data = await getDiscoverMovies(item.id);
-      if (index === genres.length - 1) {
-        setSorted(true);
-      }
-      return (item.movies = data);
-    });
+    await Promise.all(
+      genres.map(async (item, index) => {
+        const data = await getDiscoverMovies(item.id);
+        if (index === genres.length - 1) {
+          setSorted(true);
+        }
+        return (item.movies = data);
+      }),
+    );
+    return () => {
+      isMountedRef.current = false;
+    };
   };
 
   const getTrending = async () => {
@@ -64,6 +78,40 @@ const Home = ({navigation}) => {
     } catch {
       Alert.alert('error get genres');
     }
+  };
+
+  const renderItem = ({item, index}) => {
+    return (
+      <View>
+        <Text style={styles.titleCategory} numberOfLines={1}>
+          {item.name}
+        </Text>
+        {item.movies ? (
+          <FlatList
+            data={genres}
+            horizontal
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({item}) => (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('MovieInfo', {
+                    movieInfo: item.movies[index],
+                  });
+                }}>
+                <Image
+                  style={styles.movieImg}
+                  source={{
+                    uri: BaseImageUrl + item.movies[index].poster_path,
+                  }}
+                />
+              </TouchableOpacity>
+            )}
+          />
+        ) : (
+          <ActivityIndicator color="white" />
+        )}
+      </View>
+    );
   };
 
   const getDiscoverMovies = async (categoryId) => {
@@ -93,33 +141,7 @@ const Home = ({navigation}) => {
           nestedScrollEnabled
           style={styles.listTitle}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({item, index}) => (
-            <View>
-              <Text style={styles.titleCategory} numberOfLines={1}>
-                {item.name}
-              </Text>
-              <FlatList
-                data={genres}
-                horizontal
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({item}) => (
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate('MovieInfo', {
-                        movieInfo: item.movies[index],
-                      });
-                    }}>
-                    <Image
-                      style={styles.movieImg}
-                      source={{
-                        uri: BaseImageUrl + item.movies[index].poster_path,
-                      }}
-                    />
-                  </TouchableOpacity>
-                )}
-              />
-            </View>
-          )}
+          renderItem={renderItem}
         />
       )}
     </View>
