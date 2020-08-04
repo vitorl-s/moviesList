@@ -23,6 +23,7 @@ const Home = ({navigation}) => {
   const [genres, setGenres] = useState([]);
   const [isSorted, setSorted] = useState(false);
   const isMountedRef = useRef(null);
+
   const _renderItem = ({item}) => {
     return (
       <View style={styles.carouselContainer}>

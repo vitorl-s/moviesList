@@ -19,14 +19,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   carouselContainer: {
-    flex: 0.5,
+    flex: 0.8,
     alignItems: 'center',
+    paddingBottom: 50,
   },
   carouselImage: {
     resizeMode: 'cover',
     width: '50%',
-    minHeight: 300,
-    maxHeight: 400,
+    minHeight: 250,
+    maxHeight: 450,
   },
   carouselTitle: {
     color: Colors.text,
@@ -34,10 +35,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 18,
     marginTop: 15,
+    paddingBottom: 200,
     fontWeight: 'bold',
   },
   listTitle: {
     flex: 1,
+    marginTop: 25,
     width: '100%',
   },
   titleCategory: {
