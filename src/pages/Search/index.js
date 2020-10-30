@@ -26,7 +26,9 @@ const Search = () => {
         setMoviesList([]);
       }
     } catch {
-      return Alert.alert('Error searching movie');
+      return Alert.alert(
+        'Error in searching movies'
+      );
     }
   };
 
