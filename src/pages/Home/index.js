@@ -68,7 +68,9 @@ const Home = ({navigation}) => {
       const trendingData = await getTrendingMovies();
       setTrending(trendingData.results);
     } catch {
-      Alert.alert('error trending movies');
+      Alert.alert(
+        'error trending movies'
+      );
     }
   };
 
@@ -77,7 +79,9 @@ const Home = ({navigation}) => {
       const genresData = await getGenres();
       setGenres(genresData.genres);
     } catch {
-      Alert.alert('error get genres');
+      Alert.alert(
+        'error get genres'
+      );
     }
   };
 
@@ -120,7 +124,9 @@ const Home = ({navigation}) => {
       const discoverData = await discoverPopularMovies(categoryId.toString());
       return discoverData.results;
     } catch {
-      Alert.alert('error discover movies');
+      Alert.alert(
+        'error discover movies'
+      );
     }
   };
 
